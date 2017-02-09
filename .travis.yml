@@ -23,11 +23,11 @@ before_script:
 
 script:
   - make
-
-after_success:
-  #- make deploy
   - make docker-tag
   - make docker-push
+
+after_success:
+  - make inspect
 
 #deploy:
 #    provider: bintray

@@ -63,4 +63,9 @@ docker-tag:
 docker-push:
 	docker push $(DOCKER_NAME)
 
+inspect:
+	@echo inspecting our image
+	docker images
+	docker inspect -f '{{index .ContainerConfig.Labels "git-commit"}}' $(IMAGENAME)
+	docker inspect -f '{{index .ContainerConfig.Labels "git-branch"}}' $(IMAGENAME)
 
