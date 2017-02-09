@@ -1,5 +1,5 @@
 .PHONY: all get build build_in_docker docker test loadtest clean docker-tag docker-push
-all: get build docker test loadtest kill
+all: get build docker test loadtest clean
 tests: test loadtest clean
 
 OS = $(shell uname -s) 
