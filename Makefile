@@ -31,10 +31,10 @@ build:
 
 build_in_docker:
 	@echo build go code inside docker container - optional for testing
-	docker run --rm -v "$$PWD":/opt -w /opt golang:1.7 ;\
+	docker run --rm -v "$$PWD":/opt -w /opt golang:1.7 /bin/bash -c "\
 		export GOBIN=$$GOPATH/bin ;\
 		go get -v  ./... ;\
-		GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)
+		GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)"
 
 docker:
 	@echo build docker container docker
