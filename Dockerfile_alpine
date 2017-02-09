@@ -8,6 +8,5 @@ LABEL git-branch=$GIT_BRANCH
 ADD go-micro-test .
 ENV PORT 8080
 EXPOSE 8080
-#RUN adduser gorun -D
 USER guest
 ENTRYPOINT ["/go-micro-test"]

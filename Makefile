@@ -1,12 +1,26 @@
-.PHONY: all get build docker test loadtest kill
+.PHONY: all get build docker test loadtest kill deploy
 all: get build docker test loadtest kill
 tests: test loadtest kill
 
 OS = $(shell uname -s) 
-IMAGENAME=go-micro-test
-GOOS=linux
-PORTHOST=8080
-PORTCT=8080
+IMAGENAME = go-micro-test
+DOCKER_NAME = skandyla/go-micro-test
+GOOS = linux
+PORTHOST = 8080
+PORTCT = 8080
+DOCKERUSER = skandyla
+
+define tag_docker
+  @if [ "$(TRAVIS_BRANCH)" = "master" -a "$(TRAVIS_PULL_REQUEST)" = "false" ]; then \
+    docker tag $(1) $(1):latest; \
+  fi
+  @if [ "$(TRAVIS_BRANCH)" != "master" ]; then \
+    docker tag $(1) $(1):$(TRAVIS_BRANCH); \
+  fi
+  @if [ "$(TRAVIS_PULL_REQUEST)" != "false" ]; then \
+    docker tag $(1) $(1):PR_$(TRAVIS_PULL_REQUEST); \
+  fi
+endef
 
 get:
 	@echo get dependencies
@@ -38,11 +52,15 @@ kill:
 	docker ps | grep $(IMAGENAME)
 	docker ps | grep $(IMAGENAME) | awk '{print $$1}' | xargs docker kill 
 	
-	
-	
-	
-	
-	
-	
-	
- 
+deploy:	
+	@echo deploying artifacts
+	docker tag $(IMAGENAME) $(DOCKERUSER)/$(IMAGENAME):latest
+	docker push $(DOCKERUSER)/$(IMAGENAME):latest
+
+docker-tag:
+	$(call tag_docker, $(DOCKER_NAME))
+
+docker-push:
+	docker push $(DOCKER_NAME)
+
+

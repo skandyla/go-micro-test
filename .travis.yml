@@ -1,42 +1,33 @@
-sudo: required
-
-services:
-  - docker
-
-env:
-  global:
-    - IMAGENAME=go-micro-test
-    - DOCKERUSER=skandyla
-    - GOOS=linux
-    - CGO_ENABLED=0
-
 language: go
 go:
   - 1.7.x
+sudo: required
+services:
+  - docker
+
+#env:
+#  global:
+#    - IMAGENAME=go-micro-test
+#    - DOCKERUSER=skandyla
+#    - GOOS=linux
+#    - CGO_ENABLED=0
+
 
 before_install:
-  - go get -v -u ./...
-
-install:
-  # build our Go application
-  - go build -v --ldflags '-extldflags "-static"' -o $IMAGENAME
+  - docker version
+  - sudo pip install docker-compose
+  - docker-compose version
 
 before_script:
-  # build Docker image with compiled code, lauch side containers for testings
-  - docker version
-  - time docker build -t $IMAGENAME --build-arg GIT_COMMIT=$TRAVIS_COMMIT --build-arg GIT_BRANCH=$TRAVIS_BRANCH  -f Dockerfile_alpine .
-  - docker images
-  - docker run -d -p 8080:8080 $IMAGENAME
-  - docker ps
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
-  - curl http://localhost:8080/stats
+  - make
 
 after_success:
-#  # deploy artifacts, etc
-  - docker tag $IMAGENAME $DOCKERUSER/$IMAGENAME:latest
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push $DOCKERUSER/$IMAGENAME:latest
+  - make deploy
+  - make docker-tag
+  - make docker-push
 
 #deploy:
 #    provider: bintray
