@@ -39,7 +39,7 @@ build_in_docker:
 docker:
 	@echo build docker container docker
 	docker version
-	time docker build -t $(IMAGENAME) --build-arg GIT_COMMIT=$(TRAVIS_COMMIT) --build-arg GIT_BRANCH=$(TRAVIS_BRANCH)  -f Dockerfile_alpine .
+	docker build -t $(IMAGENAME) --build-arg GIT_COMMIT=$(TRAVIS_COMMIT) --build-arg GIT_BRANCH=$(TRAVIS_BRANCH)  -f Dockerfile_alpine .
 
 test:
 	@echo testing the container
