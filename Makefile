@@ -14,7 +14,7 @@ get:
 
 build:
 	@echo build go code
-	GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o main
+	GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o go-micro-test
 
 docker:
 	@echo build docker container docker

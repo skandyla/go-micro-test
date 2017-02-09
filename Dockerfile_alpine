@@ -5,7 +5,9 @@ ARG GIT_COMMIT=unknown
 ARG GIT_BRANCH=unknown
 LABEL git-commit=$GIT_COMMIT
 LABEL git-branch=$GIT_BRANCH
-ADD main .
+ADD go-micro-test .
 ENV PORT 8080
 EXPOSE 8080
-ENTRYPOINT ["/main"]
+#RUN adduser gorun -D
+USER guest
+ENTRYPOINT ["/go-micro-test"]
