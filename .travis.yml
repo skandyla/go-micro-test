@@ -18,12 +18,10 @@ before_install:
 
 install:
   # build our Go application
-  #- go build
-  - time go build -v --ldflags '-extldflags "-static"' -o main
+  - go build -v --ldflags '-extldflags "-static"' -o main
 
 before_script:
   # build Docker image with compiled code, lauch side containers for testings
-  - ls -l
   - docker version
   - time docker build -t $IMAGENAME --build-arg GIT_COMMIT=$TRAVIS_COMMIT --build-arg GIT_BRANCH=$TRAVIS_BRANCH  -f Dockerfile_alpine .
   - docker images
@@ -33,13 +31,11 @@ before_script:
 script:
   - curl http://localhost:8080/stats
 
-
 #after_success:
 #  # deploy artifacts, etc
 #  - docker tag go-docker-test1 skandyla/go-docker-test1:latest
 #  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 #  - docker push skandyla/go-docker-test1:latest
-
 
 #deploy:
 #    provider: bintray
