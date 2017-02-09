@@ -1,9 +1,10 @@
-.PHONY: all get build docker test loadtest kill deploy
+.PHONY: all get build build_in_docker docker test loadtest clean docker-tag docker-push
 all: get build docker test loadtest kill
-tests: test loadtest kill
+tests: test loadtest clean
 
 OS = $(shell uname -s) 
 IMAGENAME = skandyla/go-micro-test
+ARTF = go-micro-test
 GOOS = linux
 PORTHOST = 8080
 PORTCT = 8080
@@ -26,11 +27,14 @@ get:
 
 build:
 	@echo build go code
-	GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o go-micro-test
+	GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)
 
 build_in_docker:
 	@echo build go code inside docker container - optional for testing
-	docker run --rm -v "$$PWD":/opt -w /opt golang:1.7 go get -v  ./... ; GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o go-micro-test
+	docker run --rm -v "$$PWD":/opt -w /opt golang:1.7 ;\
+		export GOBIN=$$GOPATH/bin ;\
+		go get -v  ./... ;\
+		GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)
 
 docker:
 	@echo build docker container docker
@@ -49,11 +53,12 @@ loadtest:
 	docker run --net="host" --rm skandyla/wrk -c60 -d5 -t10  http://localhost:8080/stats
 	curl -w "\n" http://localhost:8080/stats 
 	
-kill:	
-	@echo killing the container
+clean:	
+	@echo cleaning the environment
+	rm -rvf $(ARTF)
 	docker ps | grep $(IMAGENAME)
 	docker ps | grep $(IMAGENAME) | awk '{print $$1}' | xargs docker kill 
-	
+
 docker-tag:
 	@echo tag_docker depend of branch
 	$(call tag_docker, $(IMAGENAME))
