@@ -5,12 +5,12 @@ sudo: required
 services:
   - docker
 
-#env:
-#  global:
+env:
+  global:
+    - CGO_ENABLED=0
 #    - IMAGENAME=go-micro-test
 #    - DOCKERUSER=skandyla
 #    - GOOS=linux
-#    - CGO_ENABLED=0
 
 
 before_install:
