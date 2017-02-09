@@ -25,7 +25,7 @@ script:
   - make
 
 after_success:
-  - make deploy
+  #- make deploy
   - make docker-tag
   - make docker-push
 

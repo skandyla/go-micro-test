@@ -3,7 +3,7 @@ all: get build docker test loadtest kill
 tests: test loadtest kill
 
 OS = $(shell uname -s) 
-IMAGENAME = go-micro-test
+IMAGENAME = skandyla/go-micro-test
 DOCKER_NAME = skandyla/go-micro-test
 GOOS = linux
 PORTHOST = 8080
@@ -52,10 +52,10 @@ kill:
 	docker ps | grep $(IMAGENAME)
 	docker ps | grep $(IMAGENAME) | awk '{print $$1}' | xargs docker kill 
 	
-deploy:	
-	@echo deploying artifacts
-	docker tag $(IMAGENAME) $(DOCKERUSER)/$(IMAGENAME):latest
-	docker push $(DOCKERUSER)/$(IMAGENAME):latest
+#deploy:	
+#	@echo deploying artifacts
+#	docker tag $(IMAGENAME) $(DOCKERUSER)/$(IMAGENAME):latest
+#	docker push $(DOCKERUSER)/$(IMAGENAME):latest
 
 docker-tag:
 	$(call tag_docker, $(DOCKER_NAME))
