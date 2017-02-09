@@ -5,6 +5,7 @@ tests: test loadtest clean
 OS = $(shell uname -s) 
 IMAGENAME = skandyla/go-micro-test
 ARTF = go-micro-test
+CGO_ENABLED=0
 GOOS = linux
 PORTHOST = 8080
 PORTCT = 8080
@@ -27,14 +28,14 @@ get:
 
 build:
 	@echo build go code
-	GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)
+	GOOS=$(GOOS) CGO_ENABLED=$(CGO_ENABLED) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)
 
 build_in_docker:
 	@echo build go code inside docker container - optional for testing
 	docker run --rm -v "$$PWD":/opt -w /opt golang:1.7 /bin/bash -c "\
 		export GOBIN=$$GOPATH/bin ;\
 		go get -v  ./... ;\
-		GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)"
+		GOOS=$(GOOS) CGO_ENABLED=$(CGO_ENABLED) go build -v --ldflags '-extldflags "-static"' -o $(ARTF)"
 
 docker:
 	@echo build docker container docker
