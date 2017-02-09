@@ -4,11 +4,9 @@ tests: test loadtest kill
 
 OS = $(shell uname -s) 
 IMAGENAME = skandyla/go-micro-test
-DOCKER_NAME = skandyla/go-micro-test
 GOOS = linux
 PORTHOST = 8080
 PORTCT = 8080
-DOCKERUSER = skandyla
 
 define tag_docker
   @if [ "$(TRAVIS_BRANCH)" = "master" -a "$(TRAVIS_PULL_REQUEST)" = "false" ]; then \
@@ -52,16 +50,13 @@ kill:
 	docker ps | grep $(IMAGENAME)
 	docker ps | grep $(IMAGENAME) | awk '{print $$1}' | xargs docker kill 
 	
-#deploy:	
-#	@echo deploying artifacts
-#	docker tag $(IMAGENAME) $(DOCKERUSER)/$(IMAGENAME):latest
-#	docker push $(DOCKERUSER)/$(IMAGENAME):latest
-
 docker-tag:
-	$(call tag_docker, $(DOCKER_NAME))
+	@echo tag_docker depend of branch
+	$(call tag_docker, $(IMAGENAME))
 
 docker-push:
-	docker push $(DOCKER_NAME)
+	@echo push image to dockerhub
+	docker push $(IMAGENAME)
 
 inspect:
 	@echo inspecting our image
