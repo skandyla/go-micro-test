@@ -1,0 +1,11 @@
+FROM alpine:3.4
+MAINTAINER skandyla@gmail.com
+RUN apk add --update ca-certificates
+ARG GIT_COMMIT=unknown
+ARG GIT_BRANCH=unknown
+LABEL git-commit=$GIT_COMMIT
+LABEL git-branch=$GIT_BRANCH
+ADD main .
+ENV PORT 8080
+EXPOSE 8080
+ENTRYPOINT ["/main"]
