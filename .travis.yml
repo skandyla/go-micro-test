@@ -6,6 +6,7 @@ services:
 env:
   global:
     - IMAGENAME=go-micro-test
+    - DOCKERUSER=skandyla
     - GOOS=linux
     - CGO_ENABLED=0
 
@@ -31,11 +32,11 @@ before_script:
 script:
   - curl http://localhost:8080/stats
 
-#after_success:
+after_success:
 #  # deploy artifacts, etc
-#  - docker tag go-docker-test1 skandyla/go-docker-test1:latest
-#  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-#  - docker push skandyla/go-docker-test1:latest
+  - docker tag $IMAGENAME $DOCKERUSER/$IMAGENAME:latest
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push $DOCKERUSER/$IMAGENAME:latest
 
 #deploy:
 #    provider: bintray
