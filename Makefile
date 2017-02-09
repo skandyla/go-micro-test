@@ -28,6 +28,11 @@ build:
 	@echo build go code
 	GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o go-micro-test
 
+build_in_docker:
+	@echo build go code inside docker container - optional for testing
+	docker run --rm -v "$$PWD":/opt -w /opt golang:1.7 go get -v  ./... ;\
+			 GOOS=$(GOOS) go build -v --ldflags '-extldflags "-static"' -o go-micro-test
+
 docker:
 	@echo build docker container docker
 	docker version
