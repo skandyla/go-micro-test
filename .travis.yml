@@ -19,7 +19,7 @@ before_install:
 
 install:
   # build our Go application
-  - go build -v --ldflags '-extldflags "-static"' -o main
+  - go build -v --ldflags '-extldflags "-static"' -o $IMAGENAME
 
 before_script:
   # build Docker image with compiled code, lauch side containers for testings
