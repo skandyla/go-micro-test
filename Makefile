@@ -1,7 +1,7 @@
 .PHONY: all get build build_in_docker docker test loadtest clean docker-tag docker-push
 all: get build docker test loadtest inspect clean
 tests: test loadtest clean
-jenkins: build_in_docker docker test loadtest inspect clean
+jenkins: build_in_docker docker test loadtest test_compose inspect clean
 
 OS = $(shell uname -s) 
 IMAGENAME = skandyla/go-micro-test
@@ -54,6 +54,13 @@ loadtest:
 	@echo make loadtest of the container
 	docker run --net="host" --rm skandyla/wrk -c60 -d5 -t10  http://localhost:8080/stats
 	curl -w "\n" http://localhost:8080/stats 
+
+test_compose:
+	@echo running via docker-compose
+	docker-compose up -d 
+	docker-compose ps
+	curl -w "\n" http://localhost:8000/stats 
+	docker-compose down
 	
 clean:	
 	@echo cleaning the environment

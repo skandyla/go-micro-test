@@ -1,0 +1,41 @@
+version: '2'
+services:
+  go-micro-test:
+    image: 'skandyla/go-micro-test:latest'
+    #ports:
+    #  - '80:8080'
+    environment:
+      PORT: 8000
+    network_mode: 'host'
+
+    #restart: always
+    #read_only: true
+    #hostname: go-micro-test
+
+    #cpu_shares: 73
+    #cpu_quota: 50000
+    #cpuset: 0,1
+    #user: postgresql
+
+    #dns: 8.8.8.8
+    #logging:
+      #driver: "syslog"
+      #options:
+      #  syslog-address: "tcp://192.168.0.42:123"
+    #healthcheck:
+      #test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      #interval: 1m30s
+      #timeout: 10s
+      #retries: 3
+    #extra_hosts:
+      #- "somehost:162.242.195.82"
+    #security_opt:
+      #- label:user:USER
+    #sysctls:
+      #net.core.somaxconn: 1024
+      #net.ipv4.tcp_syncookies: 0
+    #ulimits:
+      #nproc: 65535
+      #nofile:
+        #soft: 20000
+        #hard: 40000
