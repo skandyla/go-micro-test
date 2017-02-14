@@ -1,7 +1,7 @@
 .PHONY: all get build build_in_docker docker test loadtest clean docker-tag docker-push
 all: get build docker test loadtest test_compose inspect clean
 tests: test loadtest clean
-jenkins: build_in_docker docker test loadtest test_compose inspect clean
+jenkins: build_in_docker docker test loadtest inspect clean
 
 OS = $(shell uname -s) 
 IMAGENAME = skandyla/go-micro-test
