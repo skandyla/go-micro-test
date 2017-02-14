@@ -1,47 +1,33 @@
 package main
 
 import (
-	"encoding/json"
-	"github.com/thoas/stats"
-	"log"
-	"net/http"
-	"os"
     "fmt"
-	"net"
+    "net/http"
+    "log"
+    "os"
 )
 
-func handlerRoot(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-}
-func handlerTest(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte("{\"hello\": \"world\"}"))
-}
-func handlerLogs(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	ip, _, _ := net.SplitHostPort(r.RemoteAddr)
-    fmt.Fprintf(w, "IP: %s", ip)
+func Log(handler http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	hostname, err := os.Hostname()
+	if err != nil {
+      fmt.Printf("Oops: %v\n", err)
+      return
+	}
+    log.Printf("%s %s %s %s - %s", r.RemoteAddr, r.Method, r.Host, r.URL, hostname)
+	handler.ServeHTTP(w, r)
+    })
 }
 
 func main() {
-	middleware := stats.New()
-	mux := http.NewServeMux()
-
-    mux.HandleFunc("/", handlerRoot)
-    mux.HandleFunc("/test", handlerTest)
-    mux.HandleFunc("/logs", handlerLogs)
-
-	mux.HandleFunc("/stats", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		b, _ := json.Marshal(middleware.Data())
-		w.Write(b)
-	})
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("PORT environment variable was not set")
-	}
-	err := http.ListenAndServe(":"+port, middleware.Handler(mux))
+	hostname, err := os.Hostname()
 	if err != nil {
-		log.Fatal("Could not listen: ", err)
+      fmt.Printf("Oops: %v\n", err)
+      return
 	}
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello, %s - %s!", r.URL.Path[1:], hostname)
+    })
+    http.ListenAndServe(":8080", Log(http.DefaultServeMux))
 }
+
