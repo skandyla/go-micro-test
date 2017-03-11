@@ -17,7 +17,6 @@ define tag_docker
   fi
   @if [ "$(TRAVIS_BRANCH)" != "master" ]; then \
     docker tag $(1) $(1):$(TRAVIS_BRANCH); \
-    docker tag $(1) $(1):latest; \
   fi
   @if [ "$(TRAVIS_PULL_REQUEST)" != "false" ]; then \
     docker tag $(1) $(1):PR_$(TRAVIS_PULL_REQUEST); \
