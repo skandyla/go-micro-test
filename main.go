@@ -26,7 +26,7 @@ func main() {
       return
 	}
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hello, %s - %s!", r.URL.Path[1:], hostname)
+        fmt.Fprintf(w, "Hello %s - %s!", r.URL.Path[1:], hostname)
     })
     http.ListenAndServe(":8080", Log(http.DefaultServeMux))
 }
