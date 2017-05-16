@@ -11,7 +11,7 @@ func Log(handler http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	hostname, err := os.Hostname()
 	if err != nil {
-      fmt.Printf("Oops: %v\n", err)
+      fmt.Printf("Oops:  %v\n", err)
       return
 	}
     log.Printf("%s %s %s %s - %s", r.RemoteAddr, r.Method, r.Host, r.URL, hostname)
