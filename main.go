@@ -22,7 +22,7 @@ func Log(handler http.Handler) http.Handler {
 func main() {
 	hostname, err := os.Hostname()
 	if err != nil {
-      fmt.Printf("Oops:  %v\n", err)
+      fmt.Printf("Oops:   %v\n", err)
       return
 	}
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
